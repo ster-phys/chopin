@@ -34,6 +34,9 @@ ch.genre() # -> [Composition]
 >>> print(type(foo.links))
 <class 'list'>
 
+>>> print(type(foo.links[0]))
+<class 'chopin.chopin.Link'>
+
 >>> print(dir(foo.links[0]))
 ['ID', 'artists', 'delete', 'download', 'url']
 ```
