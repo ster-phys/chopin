@@ -23,10 +23,7 @@ class Link():
         self.url = url
         self.ID = ID
         self.artists = artists.split(",")
-        directory = "/tmp/chopin"
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-        self._path = "{}/{}.mp3".format(directory,ID)
+        self._path = "/tmp/{}.mp3".format(ID)
 
     def __repr__(self):
         return "Link()"
