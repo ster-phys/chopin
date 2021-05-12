@@ -12,11 +12,11 @@ import requests
 class Link():
     """
     ```
-    - Link().url
-    - Link().ID
-    - Link().artists
-    - Link().download(path=None)
-    - Link().delete()
+    - Link.url
+    - Link.ID
+    - Link.artists
+    - Link.download(path=None)
+    - Link.delete()
     ```
     """
     def __init__(self,url,ID,artists):
@@ -57,11 +57,11 @@ class Link():
 class Composition():
     """
     ```
-    - Composition().title
-    - Composition().Opus
-    - Composition().No
-    - Composition().links -> [Link()]
-    - Composition().wikiLink
+    - Composition.title
+    - Composition.Opus
+    - Composition.No
+    - Composition.links -> [Link()]
+    - Composition.wikiLink
     ```
     """
     def __init__(self,title,Op,No,wikiLink):
