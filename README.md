@@ -6,7 +6,12 @@ It does not follow any coding conventions :)
 ![](https://img.shields.io/pypi/v/chopin?style=plastic)
 ![](https://img.shields.io/github/license/ster-phys/chopin?style=plastic)
 
-## Requires
+## How to Install
+```sh
+$ pip install chopin
+```
+
+#### Requires
 ```sh
 $ pip install requests youtube_dl
 ```
