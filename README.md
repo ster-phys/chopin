@@ -2,6 +2,10 @@
 This repository is intended to make it easier to use the Chopin's compositions.
 It does not follow any coding conventions :)
 
+![](https://img.shields.io/pypi/pyversions/chopin?style=plastic)
+![](https://img.shields.io/pypi/v/chopin?style=plastic)
+![](https://img.shields.io/github/license/ster-phys/chopin?style=plastic)
+
 ## Requires
 ```sh
 $ pip install requests youtube_dl
