@@ -2,6 +2,11 @@
 This repository is intended to make it easier to use the Chopin's compositions.
 It does not follow any coding conventions :)
 
+## Requires
+```sh
+$ pip install requests youtube_dl
+```
+
 ## How to Use
 - Example
 ```python
