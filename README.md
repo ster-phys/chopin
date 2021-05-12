@@ -2,13 +2,6 @@
 This repository is intended to make it easier to use the Chopin's compositions.
 It does not follow any coding conventions :)
 
-## How to Install
-```sh
-$ git clone git@github.com:ster-phys/chopin.git
-$ cd ./chopin
-$ pip install -U .
-```
-
 ## How to Use
 - Example
 ```python
