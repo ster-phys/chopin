@@ -13,7 +13,7 @@ $ pip install chopin
 
 #### Requires
 ```sh
-$ pip install requests youtube_dl
+$ pip install requests youtube_dl bs4 lxml
 ```
 
 ## How to Use
