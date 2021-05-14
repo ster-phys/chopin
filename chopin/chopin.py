@@ -2,7 +2,6 @@
 
 import random
 import os
-import sys
 import asyncio
 import copy
 import subprocess
