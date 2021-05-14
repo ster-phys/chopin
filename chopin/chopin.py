@@ -2,12 +2,13 @@
 
 import random
 import os
-import re
 import asyncio
 import copy
 import subprocess
+from typing import List
 
 import requests
+from bs4 import BeautifulSoup
 
 class Link():
     """
@@ -17,32 +18,33 @@ class Link():
     - Link.download(path=None)
     - Link.delete()
     """
-    def __init__(self,url,ID,artists):
+    def __init__(self,url:str,ID:str,artists:str) -> None:
         self.url = url
         self.ID = ID
         self.artists = artists.split(",")
-        self._path = "/tmp/{}.mp3".format(ID)
+        self._path = f"/tmp/{ID}.mp3"
 
-    def __str__(self):
+    def __str__(self) -> str:
         s = "{"
-        s += "'url': {}".format(self.url)
-        s += ", 'ID': {}".format(self.ID)
-        s += ", 'artists': {}".format(self.artists)
+        s += f"'url': {self.url}"
+        s += f", 'ID': {self.ID}"
+        s += f", 'artists': {self.artists}"
         s += "}"
         return s
 
-    def download(self, path=None) -> str:
-        if path and ".mp3" in path:
-            self._path = path
-        elif path and not ".mp3" in path:
-            self._path = path + ".mp3"
+    def download(self, path="") -> str:
+        if path:
+            if path.endswith(".mp3"):
+                self._path = path
+            else:
+                self._path = f"{path}.mp3"
 
-        cmd = "youtube-dl -o " + self._path.replace("mp3","%(ext)s") + " -x -f bestaudio --audio-format mp3 --audio-quality 0 " + self.url
+        cmd = f"youtube-dl -o {self._path.replace('mp3','%(ext)s')} -x -f bestaudio --audio-format mp3 --audio-quality 0 {self.url}"
         subprocess.check_call(cmd.split())
 
         return self._path
 
-    def delete(self):
+    def delete(self) -> None:
         if os.path.exists(self._path):
             os.remove(self._path)
 
@@ -51,31 +53,31 @@ class Composition():
     - Composition.title
     - Composition.Opus
     - Composition.No
-    - Composition.links -> [Link()]
+    - Composition.links -> [Link]
     - Composition.wikiLink
     """
-    def __init__(self,title,Op,No,wikiLink):
+    def __init__(self,title:str,Op:str,No:str,wikiLink:str):
         self.title = title
         self.Opus = None if Op == "ㅤ" else Op
         self.No = None if No == "ㅤ" else No
-        self.links: list(Link) = []
+        self.links: List[Link] = []
         self.wikiLink = wikiLink
 
     def __str__(self):
-        s = "{} ".format(self.title)
+        s = f"{self.title} "
         if self.Opus:
-            s += "Op.{} ".format(self.Opus)
+            s += f"Op.{self.Opus} "
         if self.No:
-            s += "No.{}".format(self.No)
+            s += f"No.{self.No}"
         return s
 
-    def _appendLink(self,url,ID,artists):
+    def _appendLink(self,url:str,ID:str,artists:str) -> None:
         link = Link(url,ID,artists)
         self.links.append(link)
 
 class chopin():
-    def __init__(self, parallel=False, semaphore=5, output=True):
-        self.compositionList = []
+    def __init__(self, parallel=False, semaphore=5, output=True) -> None:
+        self.compositionList: List[Composition] = []
         while not self.compositionList:
             init = Init(output)
             if parallel:
@@ -100,13 +102,22 @@ class chopin():
             "Waltz",
         ]
 
+    def __repr__(self) -> str:
+        s = ".genre(gen='') -> List[Composition]\n"
+        s += ".get() -> Composition\n"
+        s += ".gets() -> Composition"
+        return s
+
+    def __str__(self) -> str:
+        return self.__repr__()
+
     def _list_in_list(self,l1:list,l2:list) -> bool:
         for elm in l1:
             if not elm in l2:
                 return False
         return True
 
-    def genre(self, gen=None) -> list:
+    def genre(self, gen="") -> List[Composition]:
         if not gen in self.genreList:
             gen = "Others"
 
@@ -143,40 +154,54 @@ class chopin():
         return outputCompo
 
 class Init():
-    def __init__(self, output=True):
+    def __init__(self, output=True) -> None:
         self._wiki = Wiki(output)
 
-    def mainNotPara(self) -> list:
+    def mainNotPara(self) -> List[Composition]:
         self._wiki.mainNotPara()
         return self._wiki.compoList
 
-    def mainPara(self,semaphore) -> list:
+    def mainPara(self,semaphore) -> List[Composition]:
         self._wiki.mainPara(semaphore)
         return self._wiki.compoList
 
 class Wiki():
-    def __init__(self,output=True):
-        self._url = "https://github.com/ster-phys/chopin/wiki"
-        text = requests.get(self._url).text
-        ptn = r'<tr>\n<td align="center"><a href="(?P<link>.*?)"><img class="emoji" title=":link:" alt=":link:" src="https://camo.githubusercontent.com/fa7d9823f78ebcc07a20dc50a4c7c90d8c48cdee5f2dcacb7cd458e420ac64e8/68747470733a2f2f6769746875622e6769746875626173736574732e636f6d2f696d616765732f69636f6e732f656d6f6a692f756e69636f64652f31663531372e706e67" height="20" width="20" align="absmiddle" data-canonical-src="https://github.githubassets.com/images/icons/emoji/unicode/1f517.png"></a></td>\n<td align="left">(?P<title>.*?)</td>\n<td align="center">(?P<Opus>.*?)</td>\n<td align="center">(?P<No>.*?)</td>\n</tr>'
-        self.compoList = []
-        for res in re.findall(ptn,text):
-            compo = Composition(res[1],res[2],res[3],res[0])
+    def __init__(self,output=True) -> None:
+        url = "https://github.com/ster-phys/chopin/wiki"
+        self.compoList :List[Composition] = []
+        soup = BeautifulSoup(requests.get(url).text, "lxml")
+        trList = soup.find_all("div", class_="markdown-body")[0].find_all("tr")[1:]
+        for tr in trList:
+            tdList = tr.find_all("td")
+            link = tdList[0].find('a').get("href")
+            title = tdList[1].string
+            Opus = tdList[2].string
+            No = tdList[3].string
+            compo = Composition(title=title,Op=Opus,No=No,wikiLink=link)
             self.compoList.append(compo)
-        self.output = output
+        self.output :bool = output
 
-    def req(self,i:int):
-        ptn = r'<tr>\n<td align="center"><a href="(?P<link>.*?)" rel="nofollow"><img class="emoji" title=":link:" alt=":link:" src="https://camo.githubusercontent.com/fa7d9823f78ebcc07a20dc50a4c7c90d8c48cdee5f2dcacb7cd458e420ac64e8/68747470733a2f2f6769746875622e6769746875626173736574732e636f6d2f696d616765732f69636f6e732f656d6f6a692f756e69636f64652f31663531372e706e67" height="20" width="20" align="absmiddle" data-canonical-src="https://github.githubassets.com/images/icons/emoji/unicode/1f517.png"></a></td>\n<td align="center"><code>(?P<ID>.*?)/code></td>\n<td align="left">(?P<artists>.*?)</td>\n</tr>'
+    def req(self,i:int) -> None:
         if self.output:
             print("{:>3}/{} Connect to {}".format(i+1,len(self.compoList),self.compoList[i].wikiLink))
-        text = requests.get(self.compoList[i].wikiLink).text
-        resList = re.findall(ptn,text)
-        if self.output:
-            print("Found {} IDs".format(len(resList)))
-        for res in resList:
-            self.compoList[i]._appendLink(res[0], res[1], res[2])
 
-    def mainNotPara(self):
+        soup = BeautifulSoup(requests.get(self.compoList[i].wikiLink).text, "lxml")
+        try:
+            trList = soup.find_all("div", class_="markdown-body")[0].find_all("tr")[1:]
+        except IndexError as e:
+            return
+
+        if self.output:
+            print("Found {} IDs".format(len(trList)))
+
+        for tr in trList:
+            tdList = tr.find_all("td")
+            url = tdList[0].find('a').get("href")
+            ID = tdList[1].string
+            artists = tdList[2].string
+            self.compoList[i]._appendLink(url=url,ID=ID,artists=artists)
+
+    def mainNotPara(self) -> None:
         for i in range(len(self.compoList)):
             self.req(i)
 
@@ -190,6 +215,6 @@ class Wiki():
         tasks = [runReq(i) for i in range(len(self.compoList))]
         return await asyncio.gather(*tasks)
 
-    def mainPara(self,semaphore):
+    def mainPara(self,semaphore:int) -> None:
         loop = asyncio.get_event_loop()
         loop.run_until_complete(self.paraRun(loop,semaphore))
