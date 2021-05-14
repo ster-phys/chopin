@@ -2,6 +2,7 @@
 
 import random
 import os
+import sys
 import asyncio
 import copy
 import subprocess
@@ -102,12 +103,6 @@ class chopin():
             "Waltz",
         ]
 
-    def __repr__(self) -> str:
-        s = ".genre(gen='') -> List[Composition]\n"
-        s += ".get() -> Composition\n"
-        s += ".gets() -> Composition"
-        return s
-
     def __str__(self) -> str:
         return self.__repr__()
 
@@ -117,7 +112,7 @@ class chopin():
                 return False
         return True
 
-    def genre(self, gen="") -> List[Composition]:
+    def genre(self, gen=""):# -> List[Composition]:
         if not gen in self.genreList:
             gen = "Others"
 
@@ -134,7 +129,7 @@ class chopin():
                     outputList.append(copy.deepcopy(compo))
             return outputList
 
-    def get(self) -> Composition:
+    def get(self):# -> Composition:
         outputCompo = None
         while not outputCompo:
             compo = random.choice(self.compositionList)
@@ -144,7 +139,7 @@ class chopin():
 
         return outputCompo
 
-    def gets(self) -> Composition:
+    def gets(self):# -> Composition:
         outputCompo = None
         while not outputCompo:
             compo = random.choice(self.compositionList)
@@ -174,9 +169,9 @@ class Wiki():
         for tr in trList:
             tdList = tr.find_all("td")
             link = tdList[0].find('a').get("href")
-            title = tdList[1].string
-            Opus = tdList[2].string
-            No = tdList[3].string
+            title = str(tdList[1].string)
+            Opus = str(tdList[2].string)
+            No = str(tdList[3].string)
             compo = Composition(title=title,Op=Opus,No=No,wikiLink=link)
             self.compoList.append(compo)
         self.output :bool = output
@@ -197,8 +192,8 @@ class Wiki():
         for tr in trList:
             tdList = tr.find_all("td")
             url = tdList[0].find('a').get("href")
-            ID = tdList[1].string
-            artists = tdList[2].string
+            ID = str(tdList[1].string)
+            artists = str(tdList[2].string)
             self.compoList[i]._appendLink(url=url,ID=ID,artists=artists)
 
     def mainNotPara(self) -> None:
