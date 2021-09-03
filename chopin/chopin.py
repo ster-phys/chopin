@@ -157,7 +157,17 @@ class Chopin(object):
         "Waltz",
     )
 
-    def __init__(self, force:bool=False, output=False, semaphore=5) -> None:
+    def __init__(self, force:bool=False, output:bool=False, semaphore:int=5) -> None:
+        """
+        Parameters
+        ----------
+        force : bool
+            `True` when getting data from the web, even if there is a temporary file that holds the wiki data.
+        output : bool
+            `True` when displaying the status of access to the wiki
+        semaphore : int
+            Semaphore to control the number of parallelism
+        """
         super().__init__()
 
         if force or not os.path.exists(self._json_path):
