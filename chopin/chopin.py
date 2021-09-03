@@ -2,6 +2,8 @@
 
 __all__ = (
     "Chopin",
+    "Link",
+    "Composition",
 )
 
 import asyncio
