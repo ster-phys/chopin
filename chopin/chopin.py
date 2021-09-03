@@ -106,7 +106,7 @@ class Composition(object):
     def __str__(self) -> str:
         text = f"{self.title} "
         text += f"Op.{self.opus} " if self.opus is not None else ""
-        text += f"No.{self.no} " if self.no is not None else ""
+        text += f"No.{self.no}" if self.no is not None else ""
         return text
 
     def get_file_name(self, index:int) -> str:
