@@ -19,31 +19,9 @@ $ pip install requests youtube_dl bs4 lxml
 ## How to Use
 - Example
 ```python
-import chopin
+from chopin import Chopin
 
-ch = chopin.chopin()
-
-print(ch.compositionList)
-print(ch.genreList)
-ch.get() # -> Composition
-ch.gets() # -> Composition
-ch.genre() # -> [Composition]
-```
-
-- Composition & Link
-```python
->>> print(type(foo))
-<class 'chopin.chopin.Composition'>
-
->>> print(dir(foo))
-['No', 'Opus', 'links', 'title', 'wikiLink']
-
->>> print(type(foo.links))
-<class 'list'>
-
->>> print(type(foo.links[0]))
-<class 'chopin.chopin.Link'>
-
->>> print(dir(foo.links[0]))
-['ID', 'artists', 'delete', 'download', 'url']
+ch = Chopin(force=True, output=True, semaphore=12)
+compo = ch.random_get()
+compo.links[0].download("./foo.mp3")
 ```
