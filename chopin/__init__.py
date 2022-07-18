@@ -13,7 +13,7 @@ __title__ = "chopin"
 __author__ = "ster"
 __license__ = "MIT"
 __copyright__ = "Copyright 2021-present ster"
-__version__ = "0.1.1"
+__version__ = "0.2.0a"
 
 from .chopin import *
 
