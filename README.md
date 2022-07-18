@@ -1,4 +1,5 @@
 # chopin
+
 This repository is intended to make it easier to use the Chopin's compositions.
 It does not follow any coding conventions :)
 
@@ -7,21 +8,24 @@ It does not follow any coding conventions :)
 [![](https://img.shields.io/github/license/ster-phys/chopin)](https://opensource.org/licenses/MIT)
 
 ## How to Install
+
 ```sh
 $ pip install chopin
 ```
 
-#### Requires
-```sh
-$ pip install requests youtube_dl bs4 lxml
-```
+### Requires
+
+- [youtube_dl](https://github.com/ytdl-org/youtube-dl)
 
 ## How to Use
-- Example
-```python
-from chopin import Chopin
 
-ch = Chopin(force=True, output=True, semaphore=12)
-compo = ch.random_get()
-compo.links[0].download("./foo.mp3")
+### Example
+
+```python
+>>> from chopin import Chopin
+>>> chopin = Chopin()
+>>> content = chopin.download()
+>>> print(content.path)
+'/tmp/XXXXXXXXXXX.mp3'
+>>> content.remove()
 ```
