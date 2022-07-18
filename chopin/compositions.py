@@ -57,8 +57,8 @@ class Composition(object):
         return self.__no
 
     @property
-    def youtube_dls(self) -> List[dict]:
-        return [ydl.__dict__() for ydl in self.__youtube_dls]
+    def youtube_dls(self) -> List[Content]:
+        return self.__youtube_dls
 
     @property
     def md5(self) -> str:
